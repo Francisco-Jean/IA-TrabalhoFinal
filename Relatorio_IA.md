@@ -6,6 +6,12 @@
 **Alunos:** [Nomes dos Alunos]  
 **Data:** [Data de Entrega]  
 
+## Como Usar o Modelo Treinado?
+   ```bash
+   cat model_part_* > libravogaisneuralnet.weights.h5
+   ```
+
+
 ## Objetivo
 O objetivo deste projeto é implementar uma **rede neural convolucional (CNN)** para a identificação das vogais na **Língua Brasileira de Sinais (Libras)**. Utilizamos a biblioteca **Keras** para criar e treinar o modelo, aproveitando camadas convolucionais para extrair padrões visuais relevantes e camadas densas para realizar a classificação final.
 
