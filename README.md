@@ -26,7 +26,7 @@ O dataset contém imagens de gestos em **Libras** correspondentes às letras do 
 
 ### **Desafios**  
 1. **Similaridade entre Classes**:  
-   - Exemplo: O gesto para **"E"** (mão semi-fechada) e **"O"** (mão circular) podem ser confundidos em certos ângulos.  
+   - Exemplo: O gesto para **"E"** (mão semi-fechada) e **"A"** (mão fechada) podem ser confundidos em certos ângulos.  
 2. **Variações de Iluminação e Fundo**:  
    - Imagens foram capturadas em ambientes não controlados.  
 3. **Diversidade de Tons de Pele e Tamanhos de Mão**:  
