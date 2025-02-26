@@ -1,78 +1,180 @@
-# Relatório: Implementação de uma CNN para Identificação de Vogais na Língua Brasileira de Sinais
+# Relatório: Implementação de uma CNN para Identificação de Vogais na Língua Brasileira de Sinais (LIBRAS)
 
 **Universidade Federal do Ceará**  
 **Disciplina: Inteligência Artificial**  
-**Professor:** [Nome do Professor]  
-**Alunos:** [Nomes dos Alunos]  
-**Data:** [Data de Entrega]  
-
-## Como Usar o Modelo Treinado?
-   ```bash
-   cat model_part_* > libravogaisneuralnet.weights.h5
-   ```
+**Professor:** João Paulo do Vale Madeiro  
+**Alunos:** Francisco Jean (541790) ^ Diego Caracas (542564) ^ João Gustavo (538609) ^ Levy Oliveira (541800)    
 
 ## Objetivo
-O objetivo deste projeto é implementar uma **rede neural convolucional (CNN)** para a identificação das vogais na **Língua Brasileira de Sinais (Libras)**. Utilizamos a biblioteca **Keras** para criar e treinar o modelo, aproveitando camadas convolucionais para extrair padrões visuais relevantes e camadas densas para realizar a classificação final.
+O objetivo deste projeto é implementar uma **rede neural convolucional (CNN)** para a identificação das vogais na **Língua Brasileira de Sinais (Libras)**. Utilizamos a biblioteca **Keras** para criar e treinar o modelo, aproveitando camadas convolucionais para extrair padrões relevantes e camadas densas para realizar a classificação da melhor forma possível.
+
+Exemplos de cada vogal presente no presente no dataset:
+
+![image](https://github.com/user-attachments/assets/f5b992b8-4cb6-44f9-af1e-6b3db08bc46f)
+
+## **Dataset: Libras Alphabet (Vogais)**  
+**Fonte**: [Kaggle - Libras Alphabet Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet/data)  
+
+### **Visão Geral do Dataset**  
+O dataset contém imagens de gestos em **Libras** correspondentes às letras do alfabeto. Para o nosso propósito, focamos **apenas nas vogais**.  
+
+#### **Estrutura do Dataset**  
+- **Total de Classes**: 5 (uma para cada vogal).  
+- **Imagens por Classe**: 3.000 imagens por vogal (total de 15.000 imagens).  
+- **Formato das Imagens**: 200x200 pixels, RGB (3 canais de cor).  
+- **Divisão**: É feito um split no dataset para se usar 90% das imagens para treino e 10% para teste.
+
+### **Desafios**  
+1. **Similaridade entre Classes**:  
+   - Exemplo: O gesto para **"E"** (mão semi-fechada) e **"O"** (mão circular) podem ser confundidos em certos ângulos.  
+2. **Variações de Iluminação e Fundo**:  
+   - Imagens foram capturadas em ambientes não controlados.  
+3. **Diversidade de Tons de Pele e Tamanhos de Mão**:  
+   - O dataset inclui participantes com diferentes características físicas.  
+
+### **Mais Exemplos das Classes Existentes no Dataset**  
+Abaixo estão exemplos ilustrativos dos gestos correspondentes a cada vogal:
+
+#### **Classe "A"**  
+- **Gesto**: Mão fechada em punho (polegar para o lado).  
+- **Exemplo**:  
+  ![A](https://raw.githubusercontent.com/Francisco-Jean/IA-TrabalhoFinal/refs/heads/FinalVersion/dataset/A/A1185.jpg) 
+
+#### **Classe "E"**  
+- **Gesto**: Mão semi-fechada, dedos curvados para dentro.  
+- **Exemplo**:  
+  ![E](https://github.com/Francisco-Jean/IA-TrabalhoFinal/blob/FinalVersion/dataset/E/E1010.jpg?raw=true)  
+
+#### **Classe "I"**  
+- **Gesto**: Mão aberta com dedo mindinho estendido e outros dedos dobrados.  
+- **Exemplo**:  
+  ![I](https://github.com/Francisco-Jean/IA-TrabalhoFinal/blob/FinalVersion/dataset/I/I1177.jpg?raw=true)
+
+#### **Classe "O"**  
+- **Gesto**: Mão formando um círculo (dedos curvados tocando o polegar).  
+- **Exemplo**:  
+  ![O](https://github.com/Francisco-Jean/IA-TrabalhoFinal/blob/FinalVersion/dataset/O/O113.jpg?raw=true) 
+
+#### **Classe "U"**  
+- **Gesto**: Dois dedos estendidos (indicador e médio) apontando para cima.  
+- **Exemplo**:  
+  ![U](https://github.com/Francisco-Jean/IA-TrabalhoFinal/blob/FinalVersion/dataset/U/U160.jpg?raw=true)  
+
+
+### **Pré-processamento e Dificuldades**  
+#### **Passos Críticos**  
+1. **Redimensionamento**: Padronizar imagens para 128x128 pixels (equivalente ao `input_shape` do modelo).  
+2. **Normalização**: Valores de pixel escalonados para [0, 1].  
+3. **Data Augmentation**:  
+   - Rotação (±20°), deslocamento horizontal/vertical (±10%) para generalização.  
+
+#### **Dificuldades Específicas**  
+- **Ângulos Não Padrão**: Gestos capturados de perspectivas laterais podem gerar ambiguidade.  
+- **Sobreposição de Dedos**: Em gestos como "E" ou "O", dedos curvados podem se fundir visualmente.  
 
 ## O que é uma CNN?
 As **Redes Neurais Convolucionais (CNNs)** são um tipo de rede neural especialmente eficaz para o processamento de imagens. Elas utilizam camadas convolucionais para extrair características automaticamente, reduzindo a necessidade de extração manual de features. As principais camadas de uma CNN são:
 
 - **Camadas Convolucionais**: Aplicam filtros para detectar padrões como bordas, texturas e formas.
-- **Camadas de Pooling**: Reduzem a dimensionalidade dos dados, tornando a rede mais eficiente e menos suscetível ao overfitting.
-- **Camadas Densas**: Responsáveis por tomar decisões baseadas nas features extraídas.
+- **Função de Ativação**: Introduzir não-linearidade, permitindo que a CNN aprenda padrões complexos.
+- **Camadas de Pooling**: Reduzem a dimensionalidade dos dados, tornando a rede mais eficiente e menos suscetível ao overfitting, preservando as informações mais importantes.
+- **Camada Flatten**: Converte o mapa de características 2D em um vetor 1D para ser processado pelas camadas densas.
+- **Camadas Totalmente Conectadas(Camadas Densas)**: Realizar a classificação final com base nas características extraídas.
 - **Dropout**: Regularização que desativa aleatoriamente neurônios para evitar overfitting.
 
-## Nosso Modelo
-A implementação da CNN foi feita utilizando **Keras** e segue a seguinte arquitetura:
+## CNN x Outras arquiteturas
+Dentre os benefício de utilziar da arquitetura CNN para problemas de processamento de imagens e aprendizado de máquina, podemos citar:
+- Aproveita a estrutura espacial das imagens: 
+  A CNN usa convoluções para identificar padrões locais como bordas, texturas e formas.
 
-### Camadas Convolucionais
+- Reduz a quantidade de parâmetros, prevenindo overfitting:
+  CNNs compartilham filtros (kernels), reduzindo drasticamente o número de pesos.
+
+- Reconhece objetos mesmo que sejam deslocados ou redimensionados:
+  As camadas convolucionais e pooling tornam a CNN resistente a deslocamentos, rotações e redimensionamentos.
+   
+- É otimizada para computação paralela, permitindo treinar redes profundas com milhões de imagens:
+  CNNs usam menos neurônios devido ao compartilhamento de pesos e pooling, tornando o treinamento mais rápido.
+  Além disso, operações de convolução são altamente otimizadas para GPUs, permitindo treinamento eficiente.
+
+## Modelo Implementado
+A implementação da CNN foi feita utilizando **Keras** e segue uma arquitetura com as seguintes camadas:
+
+### 1. Camadas Convolucionais e de Pooling
 1. **Primeira camada convolucional:**
-   - 64 filtros, kernel 4x4, stride 1, ativação ReLU
-   - Input shape definido pela variável `target_dims`
+   - Convolução com **64 filtros**, tamanho de kernel **3x3**, stride **1** e ativação **ReLU**.
+   - Essa camada aprende a detectar padrões básicos como bordas e texturas.
+   - Input shape definido pela variável `target_dims`, que representa as dimensões da imagem de entrada, no nosso caso `128x128`
    
-2. **Segunda camada convolucional:**
-   - 64 filtros, kernel 4x4, stride 2, ativação ReLU
-   - Reduz a dimensão da imagem
+2. **Camada de Pooling:**
+   - **MaxPooling2D** com tamanho de janela **2x2**.
+   - Reduz a dimensionalidade ao manter apenas os valores máximos dentro da janela, preservando as características mais importantes e reduzindo o risco de overfitting.
    
-3. **Dropout (0.5)** para evitar overfitting.
-
-4. **Terceira camada convolucional:**
-   - 128 filtros, kernel 4x4, stride 1, ativação ReLU
+3. **Segunda camada convolucional:**
+   - Convolução com **128 filtros**, kernel **3x3**, stride **1** e ativação **ReLU**.
+   - Detecta características mais complexas combinando as informações extraídas da camada anterior.
    
-5. **Quarta camada convolucional:**
-   - 128 filtros, kernel 4x4, stride 2, ativação ReLU
-   - Reduz a dimensionalidade novamente
+4. **Camada de Pooling:**
+   - **MaxPooling2D** com tamanho de janela **2x2**.
+   - Mantém apenas as informações mais relevantes para a classificação final.
    
-6. **Dropout (0.5)** para regularização.
+5. **Terceira camada convolucional:**
+   - Convolução com **256 filtros**, kernel **3x3**, stride **1** e ativação **ReLU**.
+   - Essa camada é responsável por capturar padrões avançados, como formas mais específicas dos gestos representando as vogais.
+   
+6. **Camada de Pooling:**
+   - **MaxPooling2D** com tamanho de janela **2x2**.
+   - Reduz a complexidade do modelo, garantindo um melhor desempenho no treinamento e inferência.
 
-7. **Quinta camada convolucional:**
-   - 256 filtros, kernel 4x4, stride 1, ativação ReLU
+### 2. Camadas Densas
+7. **Flatten:**
+   - Converte a saída das camadas convolucionais em um vetor unidimensional, preparando os dados para as camadas densas.
 
-8. **Sexta camada convolucional:**
-   - 256 filtros, kernel 4x4, stride 2, ativação ReLU
+8. **Camada totalmente conectada:**
+   - **256 neurônios** com ativação **ReLU**.
+   - Realiza uma combinação não-linear das características extraídas para tomada de decisão.
 
-### Camadas Densas
-9. **Flatten:**
-   - Converte a saída da camada convolucional em um vetor 1D para a camada densa
+9. **Dropout (0.5)**
+   - Durante o treinamento, **50% dos neurônios** são desativados aleatoriamente.
+   - Isso ajuda a reduzir overfitting e melhora a generalização do modelo para novos dados.
 
-10. **Dropout (0.5)** para regularização.
-
-11. **Camada totalmente conectada:**
-   - 512 neurônios, ativação ReLU
-
-12. **Camada de Saída:**
-   - `num_classes` neurônios com ativação **Softmax** para classificação
+10. **Camada de Saída:**
+   - Contém **`num_classes` neurônios** com ativação **Softmax**.
+   - Produz a probabilidade de cada classe (uma para cada vogal em Libras), permitindo a classificação correta do gesto.
 
 ### Compilação do Modelo
-O modelo é compilado com o otimizador **Adam**, função de perda **categorical_crossentropy** e a métrica de avaliação **accuracy**.
+O modelo é compilado com os seguintes parâmetros:
+- **Otimizador:** Adam (ajusta os pesos da rede de forma eficiente para minimizar o erro)
+- **Função de perda:** Categorical Crossentropy (mede a diferença entre as previsões do modelo e os valores reais)
+- **Métrica de avaliação:** Acurácia.
 
 ## Métricas Utilizadas
 Para avaliar o desempenho do modelo, utilizamos as seguintes métricas:
 
 - **Loss (Perda):** Mede a diferença entre as previsões do modelo e os valores reais (usando `categorical_crossentropy`).
 - **Acurácia:** Mede a proporção de previsões corretas em relação ao total de exemplos.
-- **Gráficos de Acurácia e Perda:** Normalmente, são utilizados para visualizar o progresso do treinamento e detectar sinais de overfitting.
+- **Gráficos de Acurácia e Perda:** Demonstram o progresso do treinamento e possíveis detecções de overfitting.
+![graficos_acc_loss](https://github.com/user-attachments/assets/568ea9c6-6c05-4545-a07d-51b2811873b9)
+- **Tabela De Métricas (sklearn.metrics)** <br>
+![classification](https://github.com/user-attachments/assets/5dea6a6d-eebf-4202-bfea-7b9c1ca9f5f1)
+
+**Obs: As figuras acima apresentam os resultados para um teste com `batchsize = 32` e `epochs = 10`**. No relatório de classificação, os números 0, 1,..., 4 representam as classes A, E,..., U.
+
+## Sobre a Implementação 
+
+### Como Usar o Modelo Treinado?
+Por conta de restrições no tamanho dos dados possíveis de armazenamento no GitHub, precisamos dividir o nosso modelo treinado em algumas partes, sendo necessário assim para efetuar a execução dele, executar o seguinte comando:
+
+   ```bash
+   cat model_part_* > libravogaisneuralnet.weights.h5
+   ```
+
+#### Obs: O modelo foi treinado no WSL.
+
+### Comparação da Velocidade de Treino (GPU x CPU):
+![Comparação de Hardware](https://github.com/user-attachments/assets/00d96fd5-3034-46b9-9749-f557e07cc460)
 
 ## Conclusão
-Este modelo CNN foi projetado para a identificação das vogais na **Língua Brasileira de Sinais**, extraindo características relevantes através de camadas convolucionais profundas. O uso de **dropout** e **otimizador Adam** ajuda na regularização e eficiência do treinamento. O desempenho final pode ser melhorado ajustando hiperparâmetros ou experimentando técnicas adicionais como **batch normalization** ou **data augmentation**.
+Este modelo CNN foi projetado para a identificação das vogais na **Língua Brasileira de Sinais**, extraindo características relevantes através de camadas convolucionais profundas. O uso de **dropout** e **otimizador Adam** ajuda na regularização e eficiência do treinamento. O desempenho final pode ser melhorado ajustando parâmetros importantes e analisando de maneira mais detalhada o dataset.  
+
 
