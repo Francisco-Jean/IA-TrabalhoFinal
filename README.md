@@ -99,7 +99,7 @@ Dentre os benefício de utilziar da arquitetura CNN para problemas de processame
 
 ## Nossa CNN x Arquitetura VGG x Arquitetura AlexNET
 
-| Critério          | Sua CNN         | AlexNet         | VGG-16          |
+| Critério          | Nossa CNN         | AlexNet         | VGG-16          |
 |------------------|----------------|----------------|----------------|
 | **Acurácia**    | Média           | Alta           | Muito Alta     |
 | **Parâmetros**  | ~13M            | ~60M           | ~138M          |
