@@ -82,7 +82,7 @@ As **Redes Neurais Convolucionais (CNNs)** são um tipo de rede neural especialm
 - **Camadas Totalmente Conectadas(Camadas Densas)**: Realizar a classificação final com base nas características extraídas.
 - **Dropout**: Regularização que desativa aleatoriamente neurônios para evitar overfitting.
 
-## CNN x Outras arquiteturas
+## CNN x Outros modelos
 Dentre os benefício de utilziar da arquitetura CNN para problemas de processamento de imagens e aprendizado de máquina, podemos citar:
 - Aproveita a estrutura espacial das imagens: 
   A CNN usa convoluções para identificar padrões locais como bordas, texturas e formas.
@@ -96,6 +96,19 @@ Dentre os benefício de utilziar da arquitetura CNN para problemas de processame
 - É otimizada para computação paralela, permitindo treinar redes profundas com milhões de imagens:
   CNNs usam menos neurônios devido ao compartilhamento de pesos e pooling, tornando o treinamento mais rápido.
   Além disso, operações de convolução são altamente otimizadas para GPUs, permitindo treinamento eficiente.
+
+## Nossa CNN x Arquitetura VGG
+
+| Critério                    | Sua CNN                         | VGG                                    |
+|-----------------------------|---------------------------------|----------------------------------------|
+| **Número de parâmetros**    | Menos parâmetros (mais leve)    | Muitos parâmetros (mais pesado)        |
+| **Profundidade**            | 3 camadas convolucionais        | 5 blocos convolucionais                |
+| **Aprendizado de features** | Bom, mas menos detalhado        | Melhor aprendizado de características  |
+| **Overfitting**             | Menor risco                     | Maior risco devido a muitos parâmetros |
+| **Velocidade de treino**    | Mais rápido                     | Mais lento                             |
+| **Necessidade de dados**    | Menos dados necessários         | Precisa de mais dados                  |
+| **Precisão final**          | Boa para problemas simples      | Melhor para problemas complexos        |
+
 
 ## Modelo Implementado
 A implementação da CNN foi feita utilizando **Keras** e segue uma arquitetura com as seguintes camadas:
