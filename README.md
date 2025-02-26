@@ -151,12 +151,46 @@ O modelo é compilado com os seguintes parâmetros:
 ## Métricas Utilizadas
 Para avaliar o desempenho do modelo, utilizamos as seguintes métricas:
 
-- **Loss (Perda):** Mede a diferença entre as previsões do modelo e os valores reais (usando `categorical_crossentropy`).
-- **Acurácia:** Mede a proporção de previsões corretas em relação ao total de exemplos.
+-  **Loss (Perda):** Mede a diferença entre as previsões do modelo e os valores reais (usando `categorical_crossentropy`).
+- **Acurácia:** A acurácia é a proporção de previsões corretas feitas pelo modelo em relação ao total de exemplos. Ela é útil para medir o desempenho geral do modelo em tarefas de classificação (`acuracia = (verdadeirosPosiitivos + falsosPositivos)/totalexemplos`).
+  
 - **Gráficos de Acurácia e Perda:** Demonstram o progresso do treinamento e possíveis detecções de overfitting.
 ![graficos_acc_loss](https://github.com/user-attachments/assets/568ea9c6-6c05-4545-a07d-51b2811873b9)
+
 - **Tabela De Métricas (sklearn.metrics)** <br>
 ![classification](https://github.com/user-attachments/assets/5dea6a6d-eebf-4202-bfea-7b9c1ca9f5f1)
+
+Essas métricas são amplamente utilizadas para avaliar o desempenho de modelos de classificação, especialmente em situações de classes desbalanceadas.
+
+#### 1. **Recall** (Sensibilidade ou Taxa de Verdadeiros Positivos)
+O **Recall** é a proporção de instâncias relevantes (positivas) que foram corretamente identificadas pelo modelo. Ou seja, ele mede a capacidade do modelo de **não deixar passar** exemplos positivos. 
+
+**Fórmula**:
+
+`recall = verdadeirosPositivos/(verdadeirosPositivos + falsosNegativos)`
+
+- **Verdadeiros Positivos (TP)**: Exemplos corretamente classificados como positivos.
+- **Falsos Negativos (FN)**: Exemplos positivos incorretamente classificados como negativos.
+
+#### 2. **Precision** (Precisão)
+A **Precision** é a proporção de instâncias que o modelo classificou como positivas e que realmente são positivas. Em outras palavras, ela mede a **precisão** quando o modelo diz que algo é positivo.
+
+**Fórmula**:
+
+`precision = verdadeirosPositivos/(verdadeirosPositivos + falsosPositivos)`
+
+- **Verdadeiros Positivos (TP)**: Exemplos corretamente classificados como positivos.
+- **Falsos Positivos (FP)**: Exemplos negativos incorretamente classificados como positivos.
+
+#### 3. **F1-Score**
+O **F1-Score** é a média harmônica entre Precision e Recall. Ele fornece uma métrica balanceada que leva em consideração tanto a **precisão** quanto a **sensibilidade** do modelo, sendo útil especialmente quando as classes estão desbalanceadas. Quanto mais próximo de 1, melhor é o desempenho do modelo.
+
+**Fórmula**:
+
+`f1-score = (2 x precision x recall)\(precision + recall)`
+
+
+- O **F1-Score** busca um equilíbrio entre Precision e Recall, penalizando modelos que tenham um bom desempenho em apenas uma das métricas.
 
 **Obs: As figuras acima apresentam os resultados para um teste com `batchsize = 32` e `epochs = 10`**. No relatório de classificação, os números 0, 1,..., 4 representam as classes A, E,..., U.
 
@@ -170,9 +204,6 @@ Por conta de restrições no tamanho dos dados possíveis de armazenamento no Gi
    ```
 
 #### Obs: O modelo foi treinado no WSL.
-
-### Comparação da Velocidade de Treino (GPU x CPU):
-![Comparação de Hardware](https://github.com/user-attachments/assets/00d96fd5-3034-46b9-9749-f557e07cc460)
 
 ## Conclusão
 Este modelo CNN foi projetado para a identificação das vogais na **Língua Brasileira de Sinais**, extraindo características relevantes através de camadas convolucionais profundas. O uso de **dropout** e **otimizador Adam** ajuda na regularização e eficiência do treinamento. O desempenho final pode ser melhorado ajustando parâmetros importantes e analisando de maneira mais detalhada o dataset.  
