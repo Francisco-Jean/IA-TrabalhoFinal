@@ -97,17 +97,19 @@ Dentre os benefício de utilziar da arquitetura CNN para problemas de processame
   CNNs usam menos neurônios devido ao compartilhamento de pesos e pooling, tornando o treinamento mais rápido.
   Além disso, operações de convolução são altamente otimizadas para GPUs, permitindo treinamento eficiente.
 
-## Nossa CNN x Arquitetura VGG
+## Nossa CNN x Arquitetura VGG x Arquitetura AlexNET
 
-| Critério                    | Sua CNN                         | VGG                                    |
-|-----------------------------|---------------------------------|----------------------------------------|
-| **Número de parâmetros**    | Menos parâmetros (mais leve)    | Muitos parâmetros (mais pesado)        |
-| **Profundidade**            | 3 camadas convolucionais        | 5 blocos convolucionais                |
-| **Aprendizado de features** | Bom, mas menos detalhado        | Melhor aprendizado de características  |
-| **Overfitting**             | Menor risco                     | Maior risco devido a muitos parâmetros |
-| **Velocidade de treino**    | Mais rápido                     | Mais lento                             |
-| **Necessidade de dados**    | Menos dados necessários         | Precisa de mais dados                  |
-| **Precisão final**          | Boa para problemas simples      | Melhor para problemas complexos        |
+| Critério          | Sua CNN         | AlexNet         | VGG-16          |
+|------------------|----------------|----------------|----------------|
+| **Acurácia**    | Média           | Alta           | Muito Alta     |
+| **Parâmetros**  | ~13M            | ~60M           | ~138M          |
+| **Profundidade** | 3 conv + 2 densas | 5 conv + 3 densas | 13 conv + 3 densas |
+| **Tamanho do Modelo** | Pequeno | Médio | Grande |
+| **Velocidade de Treino** | Rápido | Médio | Lento |
+| **Overfitting** | Menor risco | Pode ocorrer sem regularização | Alto sem regularização |
+| **Uso de Computação** | Leve | Médio | Alto (precisa de GPU) |
+| **Dataset Indicado** | Pequeno a médio | Médio a grande | Muito grande |
+| **Aplicação Ideal** | Tarefas simples | Imagens detalhadas | Classificação de alta precisão |
 
 
 ## Modelo Implementado
